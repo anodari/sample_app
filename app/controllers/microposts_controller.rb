@@ -1,9 +1,12 @@
 class MicropostsController < ApplicationController
+  include MicropostsHelper
   before_filter :authenticate, :only => [:create, :destroy]
   before_filter :authorized_user, :only => :destroy
 
   def create
     @micropost  = current_user.microposts.build(params[:micropost])
+    wrap @micropost.content
+    #@micropost.content = 
     if @micropost.save
       flash[:success] = "Micropost created!"
       redirect_to root_path
